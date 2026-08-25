@@ -1,0 +1,38 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hrms"
+version = "0.1.0"
+description = "Hierarchical Robust Model Selection under dependent validation data and uncertain environment mixtures"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+dependencies = [
+  "numpy>=2.0",
+  "pandas>=2.2",
+  "scipy>=1.13",
+]
+
+[project.optional-dependencies]
+paper = ["matplotlib>=3.9", "pyarrow>=17"]
+civilcomments = ["matplotlib>=3.9", "scikit-learn>=1.5"]
+te = ["openpyxl>=3.1", "pyarrow>=17", "scikit-learn>=1.5"]
+dev = ["pytest>=8", "ruff>=0.9"]
+reference = ["cvxpy>=1.6"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["hrms"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers"
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]

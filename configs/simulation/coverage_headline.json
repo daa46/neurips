@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "status": "frozen_headline_run_with_pairing_ablation",
+  "frozen_on": "2026-08-20",
+  "generator": "simulations.coverage_study",
+  "repetitions_per_icc": 500,
+  "n_bootstrap": 999,
+  "alpha": 0.05,
+  "n_environments": 3,
+  "n_candidates": 10,
+  "clusters_per_environment": 25,
+  "mean_observations_per_cluster": 10,
+  "cluster_size_imbalance": "moderate",
+  "candidate_correlation": 0.7,
+  "iccs": [0.0, 0.1, 0.3, 0.5],
+  "base_seed": 42,
+  "seed_rule": "42 + 100000 * icc_index + repetition",
+  "population_truth": "64-node Gauss-Hermite quadrature",
+  "default_calibration": "jackknife_bootstrap_t",
+  "pairing_ablation": "Separate-risk bootstrap-t: simultaneous absolute-risk intervals followed by interval-arithmetic contrasts"
+}

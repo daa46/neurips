@@ -1,0 +1,31 @@
+name: artifact-ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install locked environment
+        run: uv sync --locked --extra dev --extra paper
+      - name: Build package
+        run: uv build
+      - name: Run lightweight artifact reproduction
+        run: make reproduce PYTHON=.venv/bin/python
+      - name: Upload reproduction manifest and outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: hrms-reproduction
+          path: results/reproduction/

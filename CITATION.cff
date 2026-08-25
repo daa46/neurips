@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "Please cite the accompanying paper if you use HRMS. Replace the anonymous record after double-blind review."
+title: "HRMS: Hierarchical Robust Model Selection"
+type: software
+version: 0.1.0
+date-released: 2026-08-20
+authors:
+  - family-names: "Authors"
+    given-names: "Anonymous"
+license: MIT
+abstract: >-
+  Fixed-library model selection using paired cluster-aware simultaneous
+  risk-difference bounds and regret certificates over uncertain mixtures of
+  represented environments.

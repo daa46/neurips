@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "frozen_before_selection": true,
+  "seed": 42,
+  "calibration": {
+    "method": "heldout_platt",
+    "fraction_of_training_roots": 0.15,
+    "split_trials": 2048,
+    "solver": "liblinear",
+    "C": 1000.0,
+    "max_iter": 2000
+  },
+  "vectorizer": {
+    "analyzer": "char",
+    "lowercase": false,
+    "min_df": 3,
+    "max_df": 0.995,
+    "sublinear_tf": true,
+    "norm": "l2",
+    "dtype": "float32"
+  },
+  "candidates": [
+    {"model_id": "lr_w128_k4_c0p1", "family": "logistic", "view": "window_128", "k": 4, "C": 0.1},
+    {"model_id": "lr_w128_k4_c1", "family": "logistic", "view": "window_128", "k": 4, "C": 1.0},
+    {"model_id": "lr_w128_k6_c0p1", "family": "logistic", "view": "window_128", "k": 6, "C": 0.1},
+    {"model_id": "lr_w128_k6_c1", "family": "logistic", "view": "window_128", "k": 6, "C": 1.0},
+    {"model_id": "lr_w256_k4_c0p1", "family": "logistic", "view": "window_256", "k": 4, "C": 0.1},
+    {"model_id": "lr_w256_k4_c1", "family": "logistic", "view": "window_256", "k": 4, "C": 1.0},
+    {"model_id": "lr_w256_k6_c0p1", "family": "logistic", "view": "window_256", "k": 6, "C": 0.1},
+    {"model_id": "lr_w256_k6_c1", "family": "logistic", "view": "window_256", "k": 6, "C": 1.0},
+    {"model_id": "lr_w512_k4_c0p1", "family": "logistic", "view": "window_512", "k": 4, "C": 0.1},
+    {"model_id": "lr_w512_k4_c1", "family": "logistic", "view": "window_512", "k": 4, "C": 1.0},
+    {"model_id": "lr_w512_k6_c0p1", "family": "logistic", "view": "window_512", "k": 6, "C": 0.1},
+    {"model_id": "lr_w512_k6_c1", "family": "logistic", "view": "window_512", "k": 6, "C": 1.0},
+    {"model_id": "lr_te_k4_c0p1", "family": "logistic", "view": "te_copy", "k": 4, "C": 0.1},
+    {"model_id": "lr_te_k4_c1", "family": "logistic", "view": "te_copy", "k": 4, "C": 1.0},
+    {"model_id": "lr_te_k6_c0p1", "family": "logistic", "view": "te_copy", "k": 6, "C": 0.1},
+    {"model_id": "lr_te_k6_c1", "family": "logistic", "view": "te_copy", "k": 6, "C": 1.0},
+    {"model_id": "sgd_w128_k5_a1e4", "family": "sgd_logistic", "view": "window_128", "k": 5, "alpha": 0.0001},
+    {"model_id": "sgd_w256_k5_a1e4", "family": "sgd_logistic", "view": "window_256", "k": 5, "alpha": 0.0001},
+    {"model_id": "sgd_w512_k5_a1e4", "family": "sgd_logistic", "view": "window_512", "k": 5, "alpha": 0.0001},
+    {"model_id": "sgd_te_k5_a1e4", "family": "sgd_logistic", "view": "te_copy", "k": 5, "alpha": 0.0001},
+    {"model_id": "cnb_w128_k5_a0p5", "family": "complement_nb", "view": "window_128", "k": 5, "alpha": 0.5},
+    {"model_id": "cnb_w256_k5_a0p5", "family": "complement_nb", "view": "window_256", "k": 5, "alpha": 0.5},
+    {"model_id": "cnb_w512_k5_a0p5", "family": "complement_nb", "view": "window_512", "k": 5, "alpha": 0.5},
+    {"model_id": "cnb_te_k5_a0p5", "family": "complement_nb", "view": "te_copy", "k": 5, "alpha": 0.5}
+  ],
+  "optional_cnn": {
+    "enabled": false,
+    "reason": "No GPU or frozen deep-learning dependency is required for the public CPU library."
+  },
+  "diagnostic_only": [
+    {
+      "model_id": "diagnostic_gc_length",
+      "kind": "gc_length",
+      "family": "logistic",
+      "features": ["te_gc_fraction", "window_gc_fraction", "log1p_te_length"],
+      "standardize": true,
+      "C": 1.0
+    },
+    {
+      "model_id": "diagnostic_environment_only",
+      "kind": "environment_only",
+      "family": "logistic",
+      "features": ["environment_id"],
+      "encoding": "one_hot_ignore_unknown",
+      "C": 1.0
+    }
+  ]
+}

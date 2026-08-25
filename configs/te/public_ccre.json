@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_model_training",
+  "frozen_on": "2026-08-20",
+  "task_name": "public_te_associated_enhancer_like_ccre_prediction",
+  "claim_boundary": "Predicts association with an ENCODE candidate enhancer-like cCRE; positives are not necessarily causal regulatory TE copies and negatives are not-cCRE-annotated rather than proven inactive.",
+  "sources": {
+    "encode_registry_v4": {
+      "url": "https://downloads.wenglab.org/Registry-V4/GRCh38-cCREs.bed",
+      "path": "data/te_public/raw/GRCh38-cCREs.bed",
+      "format": "BED6; zero-based, half-open",
+      "size_bytes": 129083055,
+      "sha256": "a292aea64edea7efbef275140b78116efdef1bea5b729dc9e5513421dc868dda",
+      "data_use": "ENCODE data-use policy permits unrestricted download, analysis, and publication with attribution",
+      "citation_url": "https://www.nature.com/articles/s41586-025-09909-9"
+    },
+    "ucsc_repeatbrowser_2020": {
+      "url": "https://hgdownload.soe.ucsc.edu/hubs/RepeatBrowser2020/hg38/hg38_2020_rmsk.bed",
+      "path": "data/te_public/raw/hg38_2020_rmsk.bed",
+      "format": "BED6; zero-based, half-open",
+      "size_bytes": 217873757,
+      "sha256": "e0b8f6c70766c15d418e6933f610b8c1497cb62b46f3d1efaa56b4b80c171f2a",
+      "data_use": "UCSC hg38 database files are freely usable; Dfam families are CC0",
+      "citation_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7110667/"
+    },
+    "ucsc_rmsk_out_current": {
+      "url": "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/rmskOutCurrent.txt.gz",
+      "path": "data/te_public/raw/rmskOutCurrent.txt.gz",
+      "format": "gzip-compressed tab-delimited UCSC rmsk table",
+      "size_bytes": 170393235,
+      "sha256": "3c940b46b1074698386e4cb6ff50c7ac2bdb1dd5c6669a6ea57c9ae7798810dc",
+      "data_use": "UCSC hg38 database directory states that all files and tables are freely usable for any purpose",
+      "citation_url": "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/"
+    },
+    "ucsc_hg38_2bit": {
+      "url": "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.2bit",
+      "path": "data/te_public/raw/hg38.2bit",
+      "format": "UCSC twoBit, GRCh38 GCA_000001405.15",
+      "size_bytes": 835393456,
+      "sha256": "1f67aaa17a77b327738fe750ab37430a85dddf73c7d9189385ad1839259acec0",
+      "md5": "dcc3ea27079aa6dc3f9deccd7275e0f8",
+      "data_use": "NCBI places no restrictions on GenBank sequence use; submitter patent and other IP rights may apply",
+      "citation_url": "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/"
+    }
+  },
+  "coordinates": {
+    "assembly": "hg38",
+    "bed_convention": "zero_based_half_open",
+    "canonical_chromosomes": [
+      "chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chr8",
+      "chr9", "chr10", "chr11", "chr12", "chr13", "chr14", "chr15", "chr16",
+      "chr17", "chr18", "chr19", "chr20", "chr21", "chr22", "chrX"
+    ],
+    "chromosome_sizes": {
+      "chr1": 248956422, "chr2": 242193529, "chr3": 198295559,
+      "chr4": 190214555, "chr5": 181538259, "chr6": 170805979,
+      "chr7": 159345973, "chr8": 145138636, "chr9": 138394717,
+      "chr10": 133797422, "chr11": 135086622, "chr12": 133275309,
+      "chr13": 114364328, "chr14": 107043718, "chr15": 101991189,
+      "chr16": 90338345, "chr17": 83257441, "chr18": 80373285,
+      "chr19": 58617616, "chr20": 64444167, "chr21": 46709983,
+      "chr22": 50818468, "chrX": 156040895
+    }
+  },
+  "labels": {
+    "positive_ccre_classes": ["pELS", "dELS"],
+    "positive_minimum_fraction_of_ccre_overlapped_by_one_te": 0.5,
+    "negative_no_any_ccre_buffer_bp": 250,
+    "minimum_te_length_bp": 100,
+    "precedence": "positive_if_eligible_enhancer_overlap_else_negative_only_if_buffered_te_has_no_ccre_of_any_class_else_unlabelled",
+    "published_precedent": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11366022/"
+  },
+  "environments": [
+    "Alu", "L1", "MIR", "L2", "ERVL-MaLR", "hAT-Charlie", "ERV1", "ERVL"
+  ],
+  "sampling": {
+    "seed": "hrms-public-ccre-v1",
+    "target_pairs_per_environment": 3000,
+    "candidate_pool_multiplier": 4,
+    "maximum_final_pairs_per_subfamily": 500,
+    "maximum_candidate_pairs_per_subfamily": 2000,
+    "candidate_quota_rule": "largest-remainder proportional allocation by min(positive_count,negative_count), capped at 2000 pairs per exact repName and 12000 pairs per environment",
+    "match_exact_fields": ["environment_id", "rep_name", "chrom"],
+    "maximum_gc_fraction_difference": 0.03,
+    "maximum_relative_te_length_difference": 0.20,
+    "gc_denominator": "A+C+G+T; ambiguous bases excluded",
+    "maximum_ambiguous_base_fraction": 0.01
+  },
+  "sequences": {
+    "model_window_bp": 512,
+    "two_bit_to_fa": "tools/te/twoBitToFa",
+    "no_mask": true,
+    "orientation": "TE 5-prime to 3-prime; reverse-complement minus-strand loci in Python",
+    "negative_anchor": "same strand-aware normalized TE-copy position as its preliminarily matched positive",
+    "boundary_rule": "drop any locus whose centered model window cannot be exactly 512 bp"
+  },
+  "clustering": {
+    "mmseqs": "tools/te/mmseqs/bin/mmseqs",
+    "search_type": 3,
+    "minimum_sequence_identity": 0.8,
+    "minimum_bidirectional_coverage": 0.8,
+    "coverage_mode": 0,
+    "cluster_mode": 1,
+    "alignment_mode": 3,
+    "root_rule": "union connected components from oriented full-TE-copy and oriented 512-bp-window clustering"
+  },
+  "splits": {
+    "seed": 42,
+    "proportions": {"train": 0.6, "select": 0.2, "test": 0.2},
+    "unit": "root_cluster_id"
+  },
+  "gates": {
+    "minimum_independent_roots_per_environment_in_select_and_test": 20,
+    "preferred_independent_roots_per_environment_in_select_and_test": 50,
+    "maximum_fraction_of_environment_observations_in_one_root": 0.05,
+    "require_both_labels_in_every_environment_split": true,
+    "on_failure": "drop_the_environment_without_changing_thresholds_or_splitting_a_root"
+  }
+}

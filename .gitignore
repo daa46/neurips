@@ -1,0 +1,38 @@
+.venv/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.coverage
+htmlcov/
+
+# Generated experiment artifacts
+results/
+data/processed/
+data/interim/
+*.parquet
+
+# LaTeX build products (keep the submitted PDF explicitly if desired)
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.log
+paper/*.out
+paper/*.synctex.gz
+paper/*.toc
+
+# Large source data are local-only.
+data/raw/
+data/civilcomments/
+data/te_public/
+
+# Project-local third-party binaries used only to prepare the TE benchmark.
+tools/te/
+
+# Local platform-specific paper compiler downloaded for development.
+tools/tectonic
