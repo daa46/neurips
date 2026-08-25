@@ -14,4 +14,3 @@ def test_paired_difference_uses_common_environment_risks():
     risks = np.asarray([[0.1, 0.4], [0.2, 0.3]])
     differences = pairwise_differences(risks)
     assert np.allclose(differences[0, 1], [-0.3, -0.1])
-

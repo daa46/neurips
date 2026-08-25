@@ -8,8 +8,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from applications.te_regulation.cluster_and_split import TEBenchmarkError
-from applications.te_regulation.report_public_metrics import (
+from experiments.te_regulation.cluster_and_split import TEBenchmarkError
+from experiments.te_regulation.report_public_metrics import (
     expected_calibration_error,
     run_public_metrics_report,
 )

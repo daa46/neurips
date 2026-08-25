@@ -15,9 +15,7 @@ def test_committed_synthetic_example_is_reproducible_and_valid(tmp_path):
     assert main(["--output", str(loss_path), "--registry", str(registry_path)]) == 0
 
     assert loss_path.read_bytes() == Path("examples/synthetic_losses.csv").read_bytes()
-    assert registry_path.read_bytes() == Path(
-        "examples/synthetic_model_registry.csv"
-    ).read_bytes()
+    assert registry_path.read_bytes() == Path("examples/synthetic_model_registry.csv").read_bytes()
 
     losses = pd.read_csv(loss_path)
     registry = pd.read_csv(registry_path)

@@ -24,12 +24,8 @@ def test_candidate_and_environment_order_permutations_preserve_results(loss_tabl
     selector = HRMS(n_bootstrap=80, stability_replicates=20, random_state=8)
     original = selector.fit(loss_table)
     permuted = selector.fit(loss_table.sample(frac=1.0, random_state=999).reset_index(drop=True))
-    pd.testing.assert_series_equal(
-        original.robust_regret_lower, permuted.robust_regret_lower
-    )
-    pd.testing.assert_series_equal(
-        original.robust_regret_upper, permuted.robust_regret_upper
-    )
+    pd.testing.assert_series_equal(original.robust_regret_lower, permuted.robust_regret_lower)
+    pd.testing.assert_series_equal(original.robust_regret_upper, permuted.robust_regret_upper)
     assert original.selected_model == permuted.selected_model
 
 
@@ -79,9 +75,7 @@ def test_declared_structural_duplicate_requires_exact_loss_vector(loss_table):
         duplicate_table.loc[changed_row, "loss"], 1.0
     )
 
-    with pytest.raises(
-        ValueError, match="exactly equal observation-wise loss vectors"
-    ):
+    with pytest.raises(ValueError, match="exactly equal observation-wise loss vectors"):
         HRMS(
             structural_duplicate_pairs=(("model_0", "model_1"),),
             n_bootstrap=20,
@@ -93,9 +87,7 @@ def test_exact_declared_structural_duplicate_has_zero_bounds(loss_table):
     duplicate_table = loss_table.copy()
     model_0 = duplicate_table["model_id"].eq("model_0")
     model_1 = duplicate_table["model_id"].eq("model_1")
-    duplicate_table.loc[model_1, "loss"] = duplicate_table.loc[
-        model_0, "loss"
-    ].to_numpy()
+    duplicate_table.loc[model_1, "loss"] = duplicate_table.loc[model_0, "loss"].to_numpy()
 
     result = HRMS(
         structural_duplicate_pairs=(("model_0", "model_1"),),
@@ -104,7 +96,5 @@ def test_exact_declared_structural_duplicate_has_zero_bounds(loss_table):
         robustness_radii=(0.25,),
         random_state=9,
     ).fit(duplicate_table)
-    pair = result.pairwise_bounds.query(
-        "model == 'model_0' and comparator == 'model_1'"
-    )
+    pair = result.pairwise_bounds.query("model == 'model_0' and comparator == 'model_1'")
     assert np.count_nonzero(pair[["estimate", "lower", "upper"]].to_numpy()) == 0

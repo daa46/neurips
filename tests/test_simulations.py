@@ -7,20 +7,20 @@ from dataclasses import replace
 import numpy as np
 import pandas as pd
 
-from hrms import HRMS
-from hrms.ambiguity import ChiSquareBall
-from hrms.schema import validate_loss_table
-from simulations.calibration import (
+from experiments.simulations.calibration import (
     CalibrationConfig,
     calibration_population_risks,
     generate_calibration_data,
 )
-from simulations.rank_reversal import (
+from experiments.simulations.rank_reversal import (
     RankReversalConfig,
     generate_rank_reversal_data,
     rank_reversal_population_risks,
 )
-from simulations.run_grid import run_grid
+from experiments.simulations.run_grid import run_grid
+from hrms import HRMS
+from hrms.ambiguity import ChiSquareBall
+from hrms.schema import validate_loss_table
 
 
 def _assert_long_table_contract(table: pd.DataFrame, n_candidates: int) -> None:
@@ -56,9 +56,7 @@ def test_calibration_generator_is_paired_nested_bounded_and_reproducible() -> No
 
     _assert_long_table_contract(first.loss_table, n_candidates=4)
     pd.testing.assert_frame_equal(first.loss_table, second.loss_table)
-    pd.testing.assert_frame_equal(
-        first.true_environment_risks, second.true_environment_risks
-    )
+    pd.testing.assert_frame_equal(first.true_environment_risks, second.true_environment_risks)
     observed_counts = first.cluster_sizes.groupby("environment_id").size().to_numpy()
     np.testing.assert_array_equal(observed_counts, [3, 4, 5])
     assert first.cluster_sizes["root_cluster_id"].nunique() == 12
@@ -75,9 +73,9 @@ def test_calibration_latent_icc_one_is_constant_within_cluster() -> None:
         candidate_correlation=0.4,
         random_state=7,
     )
-    within_cluster_unique = simulation.loss_table.groupby(
-        ["root_cluster_id", "model_id"]
-    )["loss"].nunique()
+    within_cluster_unique = simulation.loss_table.groupby(["root_cluster_id", "model_id"])[
+        "loss"
+    ].nunique()
     assert within_cluster_unique.eq(1).all()
 
 
@@ -91,9 +89,7 @@ def test_calibration_quadrature_agrees_with_large_monte_carlo_truth() -> None:
         population_size=250_000,
     )
     exact = calibration_population_risks(config, method="quadrature")
-    monte_carlo = calibration_population_risks(
-        config, method="monte_carlo", random_state=31
-    )
+    monte_carlo = calibration_population_risks(config, method="monte_carlo", random_state=31)
     np.testing.assert_allclose(monte_carlo, exact, atol=2.5e-3)
 
 
@@ -110,9 +106,7 @@ def test_rank_reversal_generator_has_brier_losses_and_distinct_winners() -> None
     simulation = generate_rank_reversal_data(config)
 
     _assert_long_table_contract(simulation.loss_table, n_candidates=8)
-    expected_loss = np.square(
-        simulation.loss_table["prediction"] - simulation.loss_table["label"]
-    )
+    expected_loss = np.square(simulation.loss_table["prediction"] - simulation.loss_table["label"])
     np.testing.assert_allclose(simulation.loss_table["loss"], expected_loss)
     winners = set(simulation.true_environment_risks.idxmin(axis=1))
     assert "stable" in winners

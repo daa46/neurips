@@ -12,33 +12,34 @@ export MPLCONFIGDIR=${MPLCONFIGDIR:-/tmp/hrms-matplotlib-cache}
 mkdir -p "$MPLCONFIGDIR" "$output_dir/inputs"
 
 "$python_bin" -m pytest -q
-"$python_bin" -m ruff check applications hrms simulations scripts tests
+"$python_bin" -m ruff check src experiments scripts tests
+"$python_bin" -m ruff format --check src experiments scripts tests
 
-"$python_bin" scripts/generate_synthetic_example.py \
+"$python_bin" -m scripts.generate_synthetic_example \
   --output "$output_dir/inputs/synthetic_losses.csv" \
   --registry "$output_dir/inputs/synthetic_model_registry.csv"
 cmp "$output_dir/inputs/synthetic_losses.csv" examples/synthetic_losses.csv
 cmp "$output_dir/inputs/synthetic_model_registry.csv" examples/synthetic_model_registry.csv
 
-"$python_bin" scripts/run_hrms.py \
+"$python_bin" -m hrms.cli \
   "$output_dir/inputs/synthetic_losses.csv" \
   --model-registry "$output_dir/inputs/synthetic_model_registry.csv" \
   --output "$output_dir/example_hrms" \
   --bootstrap "$bootstrap_replicates" \
   --seed 42
 
-"$python_bin" simulations/run_grid.py \
+"$python_bin" -m experiments.simulations.run_grid \
   --preset smoke \
   --output-dir "$output_dir/simulations" \
   --n-bootstrap "$bootstrap_replicates" \
   --repetitions "$simulation_repetitions" \
   --seed 42
 
-"$python_bin" scripts/make_figures.py \
+"$python_bin" -m scripts.make_figures \
   --simulations-dir "$output_dir/simulations" \
   --output-dir "$output_dir/figures"
 
-"$python_bin" scripts/write_manifest.py \
+"$python_bin" -m scripts.write_manifest \
   --root "$output_dir" \
   --output "$output_dir/manifest.json" \
   --input canonical_losses=examples/synthetic_losses.csv \

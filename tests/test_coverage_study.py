@@ -6,13 +6,13 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from hrms.bootstrap import JackknifeBlock
-from simulations.coverage_study import (
+from experiments.simulations.coverage_study import (
     _separate_risk_bootstrap_t_bounds,
     load_coverage_config,
     main,
     run_one,
 )
+from hrms.bootstrap import JackknifeBlock
 
 
 def test_separate_risk_bounds_use_interval_arithmetic_and_are_reproducible():
@@ -102,9 +102,7 @@ def test_coverage_run_reports_separate_risk_ablation():
 
 
 def test_frozen_coverage_config_exactly_records_headline_seed_schedule():
-    settings, declared = load_coverage_config(
-        Path("configs/simulation/coverage_headline.json")
-    )
+    settings, declared = load_coverage_config(Path("configs/simulation/coverage_headline.json"))
 
     assert declared["status"] == "frozen_headline_run_with_pairing_ablation"
     assert settings == {

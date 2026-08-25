@@ -26,9 +26,10 @@ def test_artifact_manifest_hashes_inputs_outputs_and_omits_timestamps(tmp_path):
     )
 
     assert manifest["inputs"]["source"]["path"] == "input.csv"
-    assert manifest["artifacts"]["product"]["sha256"] == hashlib.sha256(
-        product.read_bytes()
-    ).hexdigest()
+    assert (
+        manifest["artifacts"]["product"]["sha256"]
+        == hashlib.sha256(product.read_bytes()).hexdigest()
+    )
     assert manifest["parameters"] == {"seed": 42}
     assert "created_at" not in manifest
 
@@ -58,9 +59,7 @@ def test_written_manifest_and_tree_manifest_are_self_excluding(tmp_path):
         artifacts={"result": artifact},
         base_dir=tmp_path,
     )
-    assert sha256_file(artifact) == json.loads(direct.read_text())["artifacts"]["result"][
-        "sha256"
-    ]
+    assert sha256_file(artifact) == json.loads(direct.read_text())["artifacts"]["result"]["sha256"]
 
     tree = root / "manifest.json"
     build_tree_manifest(root=root, output=tree)

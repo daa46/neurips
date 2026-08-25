@@ -40,4 +40,3 @@ def make_loss_table(
 @pytest.fixture
 def loss_table() -> pd.DataFrame:
     return make_loss_table()
-

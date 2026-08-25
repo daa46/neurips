@@ -8,8 +8,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from applications.te_regulation.cluster_and_split import TEBenchmarkError
-from applications.te_regulation.evaluate_public import (
+from experiments.te_regulation.cluster_and_split import TEBenchmarkError
+from experiments.te_regulation.evaluate_public import (
     deterministic_target_mixtures,
     evaluate_sealed_test,
     run_public_evaluation,
@@ -40,12 +40,8 @@ def _registry() -> pd.DataFrame:
 
 def _losses(partition: str) -> pd.DataFrame:
     rows = []
-    selection_effect = np.asarray(
-        [[0.00, 0.025, 0.045], [0.035, 0.005, 0.03], [0.04, 0.03, 0.00]]
-    )
-    test_effect = np.asarray(
-        [[0.035, 0.00, 0.04], [0.01, 0.035, 0.02], [0.045, 0.025, 0.00]]
-    )
+    selection_effect = np.asarray([[0.00, 0.025, 0.045], [0.035, 0.005, 0.03], [0.04, 0.03, 0.00]])
+    test_effect = np.asarray([[0.035, 0.00, 0.04], [0.01, 0.035, 0.02], [0.045, 0.025, 0.00]])
     effects = selection_effect if partition == "select" else test_effect
     for environment in range(3):
         for cluster in range(7):
@@ -133,9 +129,7 @@ def test_public_te_evaluation_is_sealed_complete_and_hashed(tmp_path: Path) -> N
     path = pd.read_csv(output / "selection" / "robustness_path.csv", dtype=str)
     assert set(path["radius"]) == {"0", "0.1", "0.25", "0.5", "1", "full"}
 
-    mixture_metadata = pd.read_csv(
-        output / "test_evaluation" / "target_mixture_metadata.csv"
-    )
+    mixture_metadata = pd.read_csv(output / "test_evaluation" / "target_mixture_metadata.csv")
     required_scopes = {
         "nominal",
         "inside_primary",
@@ -144,9 +138,7 @@ def test_public_te_evaluation_is_sealed_complete_and_hashed(tmp_path: Path) -> N
         "simplex_vertex",
     }
     assert required_scopes.issubset(set(mixture_metadata["scope"]))
-    weights = pd.read_csv(
-        output / "test_evaluation" / "target_mixture_weights.csv.gz"
-    )
+    weights = pd.read_csv(output / "test_evaluation" / "target_mixture_weights.csv.gz")
     assert np.allclose(weights.groupby("mixture_id")["weight"].sum(), 1.0)
     audit = pd.read_csv(output / "test_evaluation" / "certificate_audit.csv")
     assert {

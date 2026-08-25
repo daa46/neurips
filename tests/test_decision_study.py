@@ -3,13 +3,13 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from simulations.decision_study import (
+from experiments.simulations.decision_study import (
     METHODS,
     environment_signals,
     load_decision_config,
     run_study,
 )
-from simulations.rank_reversal import RankReversalConfig, candidate_library
+from experiments.simulations.rank_reversal import RankReversalConfig, candidate_library
 
 
 def test_environment_signal_path_is_frozen_and_reverses_one_environment():

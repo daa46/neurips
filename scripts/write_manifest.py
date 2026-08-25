@@ -1,30 +1,24 @@
 #!/usr/bin/env python3
 """Hash a reproduction directory and its declared external inputs."""
 
-# ruff: noqa: E402 -- direct-script support requires path setup before imports.
-
 from __future__ import annotations
 
 import argparse
-import sys
 from pathlib import Path
 
-_PROJECT_ROOT = Path(__file__).resolve().parents[1]
-if str(_PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(_PROJECT_ROOT))
-
 from hrms.artifacts import write_artifact_manifest
+
+_PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _repository_source_files() -> list[Path]:
     files = [
-        _PROJECT_ROOT / "Makefile",
-        _PROJECT_ROOT / "SPEC.md",
+        _PROJECT_ROOT / "docs/specification.md",
+        _PROJECT_ROOT / "environment.yml",
         _PROJECT_ROOT / "pyproject.toml",
-        _PROJECT_ROOT / "uv.lock",
         _PROJECT_ROOT / "scripts" / "reproduce_paper.sh",
     ]
-    for directory in ("applications", "hrms", "simulations", "scripts", "tests"):
+    for directory in ("experiments", "src/hrms", "scripts", "tests"):
         files.extend(sorted((_PROJECT_ROOT / directory).rglob("*.py")))
     return files
 

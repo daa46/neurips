@@ -7,8 +7,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from applications.te_regulation.cluster_and_split import TEBenchmarkError
-from applications.te_regulation.train_public_candidates import (
+from experiments.te_regulation.cluster_and_split import TEBenchmarkError
+from experiments.te_regulation.train_public_candidates import (
     DEFAULT_CONFIG,
     load_frozen_config,
     train_public_library,
@@ -51,10 +51,8 @@ def _cohort() -> pd.DataFrame:
                     "sample_weight": 1.0,
                     "te_sequence": te_sequence,
                     "window_sequence": sequence,
-                    "te_gc_fraction": sum(base in "GC" for base in te_sequence)
-                    / len(te_sequence),
-                    "window_gc_fraction": sum(base in "GC" for base in sequence)
-                    / len(sequence),
+                    "te_gc_fraction": sum(base in "GC" for base in te_sequence) / len(te_sequence),
+                    "window_gc_fraction": sum(base in "GC" for base in sequence) / len(sequence),
                     "te_length": len(te_sequence),
                 }
             )
@@ -170,9 +168,7 @@ def test_frozen_candidate_training_is_reproducible_and_root_safe(tmp_path: Path)
     assert len(pd.read_parquet(first["diagnostic_losses_select"])) == 32
     assert len(pd.read_parquet(first["diagnostic_losses_test"])) == 32
     manifest = json.loads(first["manifest"].read_text())
-    assert manifest["training"]["cohort_split_hash_recomputed"] == split_assignment_hash(
-        _cohort()
-    )
+    assert manifest["training"]["cohort_split_hash_recomputed"] == split_assignment_hash(_cohort())
     assert manifest["training"]["cohort_split_seed_recorded"] == 17
     assert manifest["training"]["diagnostic_only_models_excluded_from_hrms_registry"] == [
         "diagnostic_gc_length",

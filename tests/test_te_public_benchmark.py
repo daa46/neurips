@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from applications.te_regulation.public_data import (
+from experiments.te_regulation.public_data import (
     PublicDataError,
     SourceSpec,
     build_candidate_pool,
@@ -29,9 +29,7 @@ def _sha(path: Path) -> str:
 def _write_fixture_config(tmp_path: Path) -> Path:
     ccre = tmp_path / "ccre.bed"
     ccre.write_text(
-        "chr1\t100\t200\ta1\te1\tpELS\n"
-        "chr1\t400\t500\ta2\te2\tCA\n"
-        "chr2\t100\t200\ta3\te3\tdELS\n"
+        "chr1\t100\t200\ta1\te1\tpELS\nchr1\t400\t500\ta2\te2\tCA\nchr2\t100\t200\ta3\te3\tdELS\n"
     )
     repeats = tmp_path / "repeats.bed"
     repeats.write_text(
@@ -225,12 +223,8 @@ def test_sequence_extraction_controls_strand_and_records_gc(tmp_path):
     sequences = dict(read_fasta(outputs["candidate_te_sequences"]))
     with gzip.open(outputs["candidate_pool_with_gc"], "rt") as handle:
         rows = {row["locus_id"]: row for row in csv.DictReader(handle)}
-    plus = next(
-        row for row in rows.values() if row["chrom"] == "chr1" and row["label"] == "1"
-    )
-    minus = next(
-        row for row in rows.values() if row["chrom"] == "chr2" and row["label"] == "1"
-    )
+    plus = next(row for row in rows.values() if row["chrom"] == "chr1" and row["label"] == "1")
+    minus = next(row for row in rows.values() if row["chrom"] == "chr2" and row["label"] == "1")
     assert sequences[plus["locus_id"]] == "A" * 199 + "C"
     assert sequences[minus["locus_id"]] == "G" + "T" * 149
     assert all(row["sequence_eligible"] == "1" for row in rows.values())
@@ -290,9 +284,7 @@ def test_window_stage_emits_pair_complete_oriented_cluster_contract(tmp_path):
     assert {len(sequence) for sequence in windows.values()} == {64}
     minus = next(row for row in loci if row["strand"] == "-")
     assert windows[minus["locus_id"]] == "G" + "T" * 63
-    label_balance = list(
-        csv.DictReader(outputs["window_gc_balance_by_environment_label"].open())
-    )
+    label_balance = list(csv.DictReader(outputs["window_gc_balance_by_environment_label"].open()))
     paired_balance = list(csv.DictReader(outputs["window_gc_paired_differences"].open()))
     assert {(row["environment_id"], row["label"]) for row in label_balance} == {
         ("Alu", "0"),

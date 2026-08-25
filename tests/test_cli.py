@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 
 from hrms.artifacts import sha256_file
-from scripts.run_hrms import main
+from hrms.cli import main
 
 
 def test_cli_writes_complete_content_addressed_result_bundle(tmp_path):

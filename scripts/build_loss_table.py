@@ -1,22 +1,17 @@
 #!/usr/bin/env python3
 """Validate a frozen wide prediction export and calculate Brier losses."""
 
-# ruff: noqa: E402 -- direct-script support requires path setup before imports.
-
 from __future__ import annotations
 
 import argparse
-import sys
 from pathlib import Path
-
-_PROJECT_ROOT = Path(__file__).resolve().parents[1]
-if str(_PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(_PROJECT_ROOT))
 
 import pandas as pd
 
 from hrms.artifacts import write_artifact_manifest
 from hrms.predictions import predictions_to_brier_losses
+
+_PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _read(path: Path) -> pd.DataFrame:
@@ -58,9 +53,9 @@ def main(argv: list[str] | None = None) -> int:
         artifacts={"loss_table": args.output},
         parameters={"loss": "brier", "prediction_prefix": "prediction__"},
         source_files=[
+            _PROJECT_ROOT / "environment.yml",
             _PROJECT_ROOT / "pyproject.toml",
-            _PROJECT_ROOT / "uv.lock",
-            *sorted((_PROJECT_ROOT / "hrms").glob("*.py")),
+            *sorted((_PROJECT_ROOT / "src/hrms").glob("*.py")),
         ],
         source_base_dir=_PROJECT_ROOT,
         base_dir=args.output.parent,

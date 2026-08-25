@@ -26,4 +26,3 @@ def test_observation_and_cluster_estimands_differ_under_cluster_imbalance():
     cluster = estimate_environment_risks(data, "cluster")
     assert observation[0, 0] > cluster[0, 0]
     assert np.isclose(cluster[0, 0], 0.4)
-

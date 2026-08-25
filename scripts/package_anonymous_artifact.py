@@ -26,33 +26,31 @@ from pathlib import Path, PurePosixPath
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 ARCHIVE_ROOT = PurePosixPath("hrms-anonymous-artifact")
 FIXED_MTIME = 0
-BANNED_TOKENS = (b"de" b"nali", b"fr" b"ed", b"/" b"home" b"/")
+_LOCAL_USER = b"de" + b"nali"
+_LOCAL_NAME = b"fr" + b"ed"
+_HOME_PREFIX = b"/" + b"home" + b"/"
+BANNED_TOKENS = (_LOCAL_USER, _LOCAL_NAME, _HOME_PREFIX)
 TEXT_REPLACEMENTS = {
-    b"de" b"nali": b"local-user",
-    b"fr" b"ed": b"collaborator",
-    b"/" b"home" b"/": b"/local/",
+    _LOCAL_USER: b"local-user",
+    _LOCAL_NAME: b"collaborator",
+    _HOME_PREFIX: b"/local/",
 }
 
 ROOT_FILES = (
-    ".github/workflows/ci.yml",
     ".gitignore",
-    "ARTIFACT.md",
-    "CITATION.cff",
-    "LICENSE",
-    "Makefile",
+    "docs/artifact.md",
+    "environment.yml",
     "README.md",
-    "SPEC.md",
+    "docs/specification.md",
     "pyproject.toml",
-    "uv.lock",
 )
 SOURCE_TREES = (
-    "applications",
     "configs",
+    "docs",
     "examples",
-    "hrms",
-    "notes",
+    "experiments",
     "scripts",
-    "simulations",
+    "src",
     "tests",
 )
 PAPER_FILES = (
@@ -62,11 +60,8 @@ PAPER_FILES = (
     "paper/checklist.tex",
     "paper/references.bib",
     "paper/figures/method.pdf",
-    "paper/figures/method.png",
     "paper/figures/simulation.pdf",
-    "paper/figures/simulation.png",
     "paper/figures/te_public.pdf",
-    "paper/figures/te_public.png",
 )
 TE_DATA_FILES = (
     "data/te_public/gate_evidence_combined_v2.csv",
@@ -154,7 +149,8 @@ def _is_cache_or_temporary(path: Path) -> bool:
     return bool(
         parts & {"__pycache__", ".pytest_cache", ".ruff_cache", "build", "tmp"}
         or path.suffix in {".pyc", ".pyo", ".tmp"}
-        or path.name.startswith(".") and path.name != ".gitignore"
+        or path.name.startswith(".")
+        and path.name != ".gitignore"
     )
 
 
@@ -192,12 +188,8 @@ def selected_source_files(output: Path) -> list[Path]:
     for tree in RESULT_TREES:
         files.extend(_tree_files(tree))
     output_resolved = output.resolve()
-    unique = {
-        path.resolve(): path for path in files if path.resolve() != output_resolved
-    }
-    return sorted(
-        unique.values(), key=lambda path: path.relative_to(PROJECT_ROOT).as_posix()
-    )
+    unique = {path.resolve(): path for path in files if path.resolve() != output_resolved}
+    return sorted(unique.values(), key=lambda path: path.relative_to(PROJECT_ROOT).as_posix())
 
 
 def _anonymize_text(relative_path: str, data: bytes) -> tuple[bytes, bool]:
@@ -227,7 +219,7 @@ def _bundle_readme() -> bytes:
         b"`ARTIFACT_MANIFEST.sha256` authenticates every other file in this bundle. "
         b"`ANONYMIZATION_TRANSFORMS.json` records the portable-path transformation "
         b"applied to source manifests; scientific values and result tables are not "
-        b"rewritten. See `ARTIFACT.md` for commands and claim boundaries.\n"
+        b"rewritten. See `docs/artifact.md` for commands and claim boundaries.\n"
     )
 
 
@@ -264,10 +256,7 @@ def build_payload(output: Path) -> dict[str, bytes]:
         )
         + "\n"
     ).encode()
-    manifest_lines = [
-        f"{_sha256(data)}  {relative}"
-        for relative, data in sorted(payload.items())
-    ]
+    manifest_lines = [f"{_sha256(data)}  {relative}" for relative, data in sorted(payload.items())]
     payload["ARTIFACT_MANIFEST.sha256"] = ("\n".join(manifest_lines) + "\n").encode()
     return payload
 
@@ -296,9 +285,7 @@ def write_archive(output: Path, payload: dict[str, bytes]) -> None:
     for relative in payload:
         current = ARCHIVE_ROOT / relative
         directories.update(
-            parent.as_posix()
-            for parent in current.parents
-            if parent != PurePosixPath(".")
+            parent.as_posix() for parent in current.parents if parent != PurePosixPath(".")
         )
     with tempfile.NamedTemporaryFile(suffix=".tar", delete=False) as temporary:
         temporary_path = Path(temporary.name)
@@ -387,7 +374,7 @@ def verify_archive(output: Path) -> dict[str, int | str]:
         _scan_bundle(root)
         file_count = sum(path.is_file() for path in root.rglob("*"))
         environment = os.environ.copy()
-        environment["PYTHONPATH"] = str(root)
+        environment["PYTHONPATH"] = str(root / "src")
         environment["PYTHONDONTWRITEBYTECODE"] = "1"
         subprocess.run(
             [
@@ -417,7 +404,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--output",
         type=Path,
-        default=PROJECT_ROOT / "paper" / "hrms_anonymous_artifact.tar.gz",
+        default=PROJECT_ROOT / "dist" / "hrms_anonymous_artifact.tar.gz",
     )
     return parser
 

@@ -2,7 +2,7 @@
 """Render the frozen public-TE evaluation as a publication figure.
 
 The script is intentionally a pure rendering layer.  It reads only tidy CSV
-exports written by ``applications/te_regulation/evaluate_public.py`` and does
+exports written by ``experiments/te_regulation/evaluate_public.py`` and does
 not fit, select, resample, or inspect raw predictions.  The only arithmetic is
 display-oriented (excess risk, scaling, and descriptive quantiles across the
 prespecified target-mixture design).
@@ -105,9 +105,7 @@ def _boolean_column(table: pd.DataFrame, column: str, source: Path) -> pd.Series
     mapping = {"true": True, "false": False, "1": True, "0": False}
     unknown = sorted(set(normalized).difference(mapping))
     if unknown:
-        raise ValueError(
-            f"{source} column {column!r} contains invalid booleans: {unknown[:5]}"
-        )
+        raise ValueError(f"{source} column {column!r} contains invalid booleans: {unknown[:5]}")
     return normalized.map(mapping).astype(bool)
 
 
@@ -394,9 +392,8 @@ def _prepare_robustness_path(
             raise ValueError(f"{source} selected model is excluded at rho={radius}")
         reported_sizes = frame["confidence_set_size"].unique()
         observed_size = int(frame["set_bool"].sum())
-        if (
-            len(reported_sizes) != 1
-            or not math.isclose(float(reported_sizes[0]), observed_size, abs_tol=1e-12)
+        if len(reported_sizes) != 1 or not math.isclose(
+            float(reported_sizes[0]), observed_size, abs_tol=1e-12
         ):
             raise ValueError(f"{source} has an inconsistent non-exclusion-set size at rho={radius}")
         selected_row = selected.iloc[0]
@@ -448,18 +445,11 @@ def _prepare_cluster_diagnostics(
         raise ValueError(f"{source} environments differ from the held-out risk grid")
     if (subset["independent_root_clusters"] < 1).any():
         raise ValueError(f"{source} independent-root counts must be positive")
-    if (
-        (subset["effective_root_clusters"] <= 0).any()
-        or (
-            subset["effective_root_clusters"]
-            > subset["independent_root_clusters"] + 1e-9
-        ).any()
-    ):
+    if (subset["effective_root_clusters"] <= 0).any() or (
+        subset["effective_root_clusters"] > subset["independent_root_clusters"] + 1e-9
+    ).any():
         raise ValueError(f"{source} effective-root counts are outside valid bounds")
-    if (
-        (subset["max_cluster_leverage"] <= 0).any()
-        or (subset["max_cluster_leverage"] > 1).any()
-    ):
+    if (subset["max_cluster_leverage"] <= 0).any() or (subset["max_cluster_leverage"] > 1).any():
         raise ValueError(f"{source} maximum root leverage must lie in (0, 1]")
     order = _environment_order(set(subset["environment_id"]))
     return subset.set_index("environment_id").loc[order].reset_index()
@@ -865,9 +855,7 @@ def build_te_figure(
             axis_c = figure.add_subplot(bottom[0, 1])
             axis_d = None
         else:
-            bottom = outer[1, 0].subgridspec(
-                1, 3, width_ratios=(1.08, 1.13, 1.0), wspace=0.80
-            )
+            bottom = outer[1, 0].subgridspec(1, 3, width_ratios=(1.08, 1.13, 1.0), wspace=0.80)
             axis_b = figure.add_subplot(bottom[0, 0])
             axis_c = figure.add_subplot(bottom[0, 1])
             axis_d = figure.add_subplot(bottom[0, 2])

@@ -36,4 +36,3 @@ def test_registry_rejects_pending_hashes():
 def test_predictions_must_match_frozen_library():
     with pytest.raises(ValueError, match="differs from registry"):
         assert_prediction_library_matches(_registry(), ["a"])
-

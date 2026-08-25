@@ -167,9 +167,7 @@ def _write_fixture(directory: Path) -> dict[str, Path]:
             }
         )
     diagnostics_path = directory / "cluster_diagnostics.csv"
-    pd.DataFrame(diagnostics_rows).to_csv(
-        diagnostics_path, index=False, lineterminator="\n"
-    )
+    pd.DataFrame(diagnostics_rows).to_csv(diagnostics_path, index=False, lineterminator="\n")
     return {
         "ranking": ranking_path,
         "selected": selected_path,
@@ -218,9 +216,7 @@ def test_heatmap_order_and_excess_brier_are_result_order_invariant(tmp_path: Pat
     table = pd.read_csv(paths["ranking"])
     shuffled = table.sample(frac=1.0, random_state=91).reset_index(drop=True)
     first, first_displays, first_codes = _prepare_heatmap(table, paths["ranking"])
-    second, second_displays, second_codes = _prepare_heatmap(
-        shuffled, tmp_path / "shuffled.csv"
-    )
+    second, second_displays, second_codes = _prepare_heatmap(shuffled, tmp_path / "shuffled.csv")
     pd.testing.assert_frame_equal(first, second)
     assert [value.model_id for value in first_displays] == [
         value.model_id for value in second_displays

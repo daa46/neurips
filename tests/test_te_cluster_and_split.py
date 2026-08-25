@@ -6,7 +6,7 @@ from types import SimpleNamespace
 import pandas as pd
 import pytest
 
-from applications.te_regulation.cluster_and_split import (
+from experiments.te_regulation.cluster_and_split import (
     TEBenchmarkError,
     _audit_assignment,
     assign_stratified_root_splits,
@@ -40,15 +40,9 @@ def test_component_union_closes_links_from_both_sequence_views() -> None:
     ).set_index("observation_id")
 
     assert membership.loc["a", "te_component_id"] == membership.loc["b", "te_component_id"]
-    assert membership.loc["b", "window_component_id"] == membership.loc[
-        "c", "window_component_id"
-    ]
-    assert membership.loc["a", "root_cluster_id"] == membership.loc[
-        "c", "root_cluster_id"
-    ]
-    assert membership.loc["d", "root_cluster_id"] != membership.loc[
-        "a", "root_cluster_id"
-    ]
+    assert membership.loc["b", "window_component_id"] == membership.loc["c", "window_component_id"]
+    assert membership.loc["a", "root_cluster_id"] == membership.loc["c", "root_cluster_id"]
+    assert membership.loc["d", "root_cluster_id"] != membership.loc["a", "root_cluster_id"]
 
 
 def test_design_pair_edges_are_part_of_root_but_keep_separate_component_id() -> None:
@@ -60,18 +54,16 @@ def test_design_pair_edges_are_part_of_root_but_keep_separate_component_id() -> 
     ).set_index("observation_id")
 
     assert membership["root_cluster_id"].nunique() == 1
-    assert membership.loc["c", "design_pair_component_id"] == membership.loc[
-        "d", "design_pair_component_id"
-    ]
-    assert membership.loc["a", "design_pair_component_id"] != membership.loc[
-        "c", "design_pair_component_id"
-    ]
-    assert membership.loc["a", "te_component_id"] == membership.loc[
-        "b", "te_component_id"
-    ]
-    assert membership.loc["c", "te_component_id"] != membership.loc[
-        "d", "te_component_id"
-    ]
+    assert (
+        membership.loc["c", "design_pair_component_id"]
+        == membership.loc["d", "design_pair_component_id"]
+    )
+    assert (
+        membership.loc["a", "design_pair_component_id"]
+        != membership.loc["c", "design_pair_component_id"]
+    )
+    assert membership.loc["a", "te_component_id"] == membership.loc["b", "te_component_id"]
+    assert membership.loc["c", "te_component_id"] != membership.loc["d", "te_component_id"]
 
 
 def test_mmseqs_release18_command_freezes_nucleotide_80_80_settings(
@@ -92,7 +84,7 @@ def test_mmseqs_release18_command_freezes_nucleotide_80_80_settings(
         )
         return SimpleNamespace(returncode=0, stderr="", stdout="")
 
-    monkeypatch.setattr("applications.te_regulation.cluster_and_split.subprocess.run", fake_run)
+    monkeypatch.setattr("experiments.te_regulation.cluster_and_split.subprocess.run", fake_run)
     result = run_mmseqs_connected_components(
         {"a": "ACGT" * 30, "b": "ACGT" * 30},
         mmseqs_path=executable,
@@ -125,9 +117,7 @@ def test_mmseqs_release18_command_freezes_nucleotide_80_80_settings(
     assert command[command.index("--alignment-mode") + 1] == "3"
     assert command[command.index("-s") + 1] == "7.5"
     assert command[command.index("--max-seqs") + 1] == "1"
-    assert command[command.index("--format-output") + 1] == (
-        "query,target,pident,qcov,tcov"
-    )
+    assert command[command.index("--format-output") + 1] == ("query,target,pident,qcov,tcov")
     # Release 18 rejects easy-cluster connected-component mode for nucleotide
     # input, so the production code computes the transitive closure of these
     # audited threshold edges itself.

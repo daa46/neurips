@@ -6,8 +6,8 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from applications.te_regulation.cluster_and_split import TEBenchmarkError, read_fasta
-from applications.te_regulation.freeze_cluster_sample import (
+from experiments.te_regulation.cluster_and_split import TEBenchmarkError, read_fasta
+from experiments.te_regulation.freeze_cluster_sample import (
     DEFAULT_CONFIG,
     freeze_cluster_sample,
     select_final_pairs,
@@ -59,12 +59,10 @@ def _window_fixture(path: Path, *, two_environments: bool = False) -> Path:
     for index in range(4):
         pair_id = f"pair_{index}"
         family = "A" if index < 3 else "B"
-        environment = "drop" if two_environments and index < 2 else (
-            "keep" if two_environments else "env"
+        environment = (
+            "drop" if two_environments and index < 2 else ("keep" if two_environments else "env")
         )
-        pair_rows.append(
-            {"pair_id": pair_id, "environment_id": environment, "rep_name": family}
-        )
+        pair_rows.append({"pair_id": pair_id, "environment_id": environment, "rep_name": family})
         for label in (0, 1):
             observation = f"obs_{index}_{label}"
             locus_rows.append(
@@ -198,9 +196,7 @@ def test_production_exclusion_is_pinned_to_failing_pilot_evidence(tmp_path: Path
     assert set(selected["environment_id"]) == {"keep"}
     assert len(selected) == 2
     decision = pd.read_csv(outputs["gate_decision"])
-    assert decision.loc[decision["environment_id"].eq("drop"), "decision"].item() == (
-        "exclude"
-    )
+    assert decision.loc[decision["environment_id"].eq("drop"), "decision"].item() == ("exclude")
     manifest = json.loads(outputs["manifest"].read_text(encoding="utf-8"))
     assert manifest["final_sample_frozen"] is True
     assert manifest["config"]["sha256"] == sha256_file(DEFAULT_CONFIG)

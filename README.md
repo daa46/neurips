@@ -43,38 +43,40 @@ print(result.model_confidence_set)
 
 The long-form loss table must contain exactly one row per observation and model.
 Every observation must have predictions from the same registered candidate
-library. See [SPEC.md](SPEC.md) for estimands, guarantees, and data governance.
+library. See the [method specification](docs/specification.md) for estimands,
+guarantees, and data governance.
 
 ## Install and reproduce
 
-Python 3.11 or newer is required. The lockfile contains the exact environment;
-the package itself has only NumPy, pandas, and SciPy as runtime dependencies.
+Conda is required. Create the project environment and install the local package:
 
 ```bash
-uv sync --locked --extra dev --extra paper
-make reproduce PYTHON=.venv/bin/python
+conda env create -f environment.yml
+conda activate hrms
+python -m pip install --no-deps --no-build-isolation -e .
+PYTHON_BIN=python bash scripts/reproduce_paper.sh results/reproduction
 ```
 
-The second command runs all tests and lint checks, regenerates the committed
+The reproduction command runs all tests and lint checks, regenerates the committed
 synthetic input, runs HRMS, executes the lightweight simulation grid, renders
 descriptive figures, and writes `results/reproduction/manifest.json` with a
 SHA-256 digest for every input and output. It normally completes in seconds; it
 is an integration check, not the high-resolution paper experiment. Override
 `BOOTSTRAP` and `REPETITIONS` for a larger run.
 
-Individual targets are also available:
+Individual commands are also available:
 
 ```bash
-make test PYTHON=.venv/bin/python
-make example PYTHON=.venv/bin/python
-make smoke PYTHON=.venv/bin/python
-make figures PYTHON=.venv/bin/python
+python -m pytest -q
+python -m hrms.cli examples/synthetic_losses.csv \
+  --model-registry examples/synthetic_model_registry.csv --output results/example
+cd paper && latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 ```
 
-To run an arbitrary table from a repository checkout without installing HRMS:
+After installation, run an arbitrary loss table with the package CLI:
 
 ```bash
-.venv/bin/python scripts/run_hrms.py path/to/losses_select.csv \
+hrms-select path/to/losses_select.csv \
   --model-registry path/to/model_registry.csv \
   --output results/my_analysis --bootstrap 2000 --seed 42
 ```
@@ -132,7 +134,7 @@ the long loss contract happens once after training-only calibration; the current
 statistical package deliberately does not fit or recalibrate prediction models.
 
 ```bash
-.venv/bin/python scripts/build_loss_table.py predictions_select.parquet \
+python -m scripts.build_loss_table predictions_select.parquet \
   model_registry.csv --output losses_select.parquet
 ```
 
@@ -152,7 +154,7 @@ files remain ignored by version control, so an anonymous release must explicitly
 include the cited summaries and manifests rather than relying on a repository
 checkout to contain them.
 
-The derived CivilComments pipeline under `applications/civilcomments/` has been
+The derived CivilComments pipeline under `experiments/civilcomments/` has been
 run through a sealed-test evaluation. Its training, selection, test-evaluation,
 and IID-root sensitivity manifests are under `results/civilcomments/`. Downloaded
 or derived comment text is not redistributed; `data/civilcomments/` and the large
@@ -171,7 +173,7 @@ gate retained four represented RepeatMasker families (`ERVL`, `L1`, `L2`, and
 `MIR`). The final root-disjoint cohort has 22,590 loci (11,295 matched pairs)
 and 10,920 transitive homology roots, split into 13,702/4,450/4,438
 train/select/test observations. The immutable cohort and split hashes are
-recorded in [ARTIFACT.md](ARTIFACT.md).
+recorded in [docs/artifact.md](docs/artifact.md).
 
 The frozen CPU library contains 24 candidate configurations plus two
 diagnostic-only controls. With `alpha=0.05`, 1,999 root bootstrap replicates,
@@ -185,8 +187,17 @@ reduced regret here. The finite held-out test reference gives robust regret
 0.001383 at `rho=0.25`, within the reported certificate.
 
 Large source, derived-data, prediction, and result trees are intentionally
-ignored by version control. The current working tree contains the sealed local
-outputs, but no public artifact archive or DOI is claimed. A release must
-explicitly package the aggregate tables and manifests identified in
-[ARTIFACT.md](ARTIFACT.md); a plain repository checkout is not sufficient.
-# neurips-aug-28
+ignored by version control. They are not present in a clean checkout. A full
+release must package the aggregate tables and manifests identified in the
+[artifact guide](docs/artifact.md); no public archive or DOI is currently claimed.
+
+## Repository layout
+
+- `src/hrms/`: installable statistical library and CLI.
+- `environment.yml`: Conda environment for development and reproduction.
+- `tests/`: package, experiment, and reproduction contract tests.
+- `experiments/`: simulations and application-specific pipelines.
+- `configs/`: frozen experiment configurations.
+- `scripts/`: figure, release, and reproduction utilities.
+- `docs/`: method specification, artifact guide, and frozen protocols.
+- `paper/`: manuscript source, required vector figures, and compiled PDF.

@@ -16,21 +16,13 @@ def test_repeated_runs_with_same_seed_are_exact(loss_table):
 def test_global_row_duplication_does_not_add_independent_evidence(loss_table):
     duplicated = pd.concat(
         [
-            loss_table.assign(
-                observation_id=lambda frame: frame["observation_id"] + "_copy0"
-            ),
-            loss_table.assign(
-                observation_id=lambda frame: frame["observation_id"] + "_copy1"
-            ),
+            loss_table.assign(observation_id=lambda frame: frame["observation_id"] + "_copy0"),
+            loss_table.assign(observation_id=lambda frame: frame["observation_id"] + "_copy1"),
         ],
         ignore_index=True,
     )
-    original = cluster_bootstrap(
-        validate_loss_table(loss_table), n_bootstrap=50, random_state=21
-    )
-    copied = cluster_bootstrap(
-        validate_loss_table(duplicated), n_bootstrap=50, random_state=21
-    )
+    original = cluster_bootstrap(validate_loss_table(loss_table), n_bootstrap=50, random_state=21)
+    copied = cluster_bootstrap(validate_loss_table(duplicated), n_bootstrap=50, random_state=21)
     assert np.allclose(original.point_risks, copied.point_risks)
     assert np.allclose(original.bootstrap_risks, copied.bootstrap_risks)
     assert np.array_equal(original.cluster_counts, copied.cluster_counts)
@@ -56,9 +48,7 @@ def test_spanning_root_clusters_trigger_global_resampling():
         validate_loss_table(pd.DataFrame(rows)), n_bootstrap=20, random_state=4
     )
     assert result.resampling == "global"
-    blocks = cluster_jackknife_pseudovalues(
-        validate_loss_table(pd.DataFrame(rows))
-    )
+    blocks = cluster_jackknife_pseudovalues(validate_loss_table(pd.DataFrame(rows)))
     assert len(blocks) == 1
     assert blocks[0].risk_pseudovalues.shape == (8, 2, 2)
     assert np.array_equal(blocks[0].environment_indices, np.asarray([0, 1]))
