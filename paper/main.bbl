@@ -1,0 +1,161 @@
+\begin{thebibliography}{19}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Agarwal and Zhang(2022)]{agarwal2022mro}
+Alekh Agarwal and Tong Zhang.
+\newblock Minimax regret optimization for robust machine learning under
+  distribution shift.
+\newblock In \emph{Proceedings of the 35th Conference on Learning Theory},
+  volume 178 of \emph{Proceedings of Machine Learning Research}, pages
+  2704--2729. PMLR, 2022.
+\newblock URL \url{https://proceedings.mlr.press/v178/agarwal22b.html}.
+
+\bibitem[Ben-Tal et~al.(2013)Ben-Tal, den Hertog, De~Waegenaere, Melenberg, and
+  Rennen]{bental2013phi}
+Aharon Ben-Tal, Dick den Hertog, Anja De~Waegenaere, Bertrand Melenberg, and
+  Gijs Rennen.
+\newblock Robust solutions of optimization problems affected by uncertain
+  probabilities.
+\newblock \emph{Management Science}, 59\penalty0 (2):\penalty0 341--357, 2013.
+\newblock \doi{10.1287/mnsc.1120.1641}.
+
+\bibitem[Borkan et~al.(2019)Borkan, Dixon, Sorensen, Thain, and
+  Vasserman]{borkan2019civilcomments}
+Daniel Borkan, Lucas Dixon, Jeffrey Sorensen, Nithum Thain, and Lucy Vasserman.
+\newblock Nuanced metrics for measuring unintended bias with real data for text
+  classification.
+\newblock In \emph{Companion Proceedings of the 2019 World Wide Web
+  Conference}, pages 491--500, 2019.
+\newblock \doi{10.1145/3308560.3317593}.
+
+\bibitem[Chen et~al.(2021)Chen, Goel, Sohoni, Poms, Fatahalian, and
+  R{\'e}]{chen2021mandoline}
+Mayee Chen, Karan Goel, Nimit~S. Sohoni, Fait Poms, Kayvon Fatahalian, and
+  Christopher R{\'e}.
+\newblock {MANDOLINE}: Model evaluation under distribution shift.
+\newblock In \emph{Proceedings of the 38th International Conference on Machine
+  Learning}, volume 139 of \emph{Proceedings of Machine Learning Research},
+  pages 1617--1629. PMLR, 2021.
+\newblock URL \url{https://proceedings.mlr.press/v139/chen21i.html}.
+
+\bibitem[Dann et~al.(2025)Dann, Mansour, Marinov, and Mohri]{dann2025routing}
+Christoph Dann, Yishay Mansour, Teodor~Vanislavov Marinov, and Mehryar Mohri.
+\newblock Principled model routing for unknown mixtures of source domains.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~38, pages 45459--45490, 2025.
+\newblock \doi{10.52202/085713-1356}.
+\newblock URL
+  \url{https://proceedings.neurips.cc/paper_files/paper/2025/hash/39c60dda48ebf0a2e5dda52ce08eb5c8-Abstract-Conference.html}.
+
+\bibitem[Du et~al.(2024)Du, Chobirko, Zhuo, Feschotte, and
+  Wang]{du2024regulatory}
+Alan~Y. Du, Jason~D. Chobirko, Xiaoyu Zhuo, C{\'e}dric Feschotte, and Ting
+  Wang.
+\newblock Regulatory transposable elements in the encyclopedia of {DNA}
+  elements.
+\newblock \emph{Nature Communications}, 15:\penalty0 7594, 2024.
+\newblock \doi{10.1038/s41467-024-51921-6}.
+
+\bibitem[Fernandes et~al.(2020)Fernandes, Zamudio-Hurtado, Clawson, Kent,
+  Haussler, Salama, and Haeussler]{fernandes2020repeatbrowser}
+Jason~D. Fernandes, Armando Zamudio-Hurtado, Hiram Clawson, W.~James Kent,
+  David Haussler, Sofie~R. Salama, and Maximilian Haeussler.
+\newblock The {UCSC} repeat browser allows discovery and visualization of
+  evolutionary conflict across repeat families.
+\newblock \emph{Mobile DNA}, 11:\penalty0 13, 2020.
+\newblock \doi{10.1186/s13100-020-00208-w}.
+
+\bibitem[Field and Welsh(2007)]{field2007cluster}
+C.~A. Field and A.~H. Welsh.
+\newblock Bootstrapping clustered data.
+\newblock \emph{Journal of the Royal Statistical Society: Series B (Statistical
+  Methodology)}, 69\penalty0 (3):\penalty0 369--390, 2007.
+\newblock \doi{10.1111/j.1467-9868.2007.00593.x}.
+
+\bibitem[Gulrajani and Lopez-Paz(2021)]{gulrajani2021domainbed}
+Ishaan Gulrajani and David Lopez-Paz.
+\newblock In search of lost domain generalization.
+\newblock In \emph{International Conference on Learning Representations}, 2021.
+\newblock URL \url{https://openreview.net/forum?id=lQdXeXDoWtI}.
+
+\bibitem[Hall(1988)]{hall1988bootstrap}
+Peter Hall.
+\newblock Theoretical comparison of bootstrap confidence intervals.
+\newblock \emph{The Annals of Statistics}, 16\penalty0 (3):\penalty0 927--953,
+  1988.
+\newblock \doi{10.1214/aos/1176350933}.
+
+\bibitem[Han et~al.(2024)Han, Huang, and Wang]{han2024model}
+Elise Han, Chengpiao Huang, and Kaizheng Wang.
+\newblock Model assessment and selection under temporal distribution shift.
+\newblock In \emph{Proceedings of the 41st International Conference on Machine
+  Learning}, volume 235 of \emph{Proceedings of Machine Learning Research},
+  pages 17374--17392. PMLR, 2024.
+\newblock URL \url{https://proceedings.mlr.press/v235/han24b.html}.
+
+\bibitem[Hansen et~al.(2011)Hansen, Lunde, and Nason]{hansen2011mcs}
+Peter~R. Hansen, Asger Lunde, and James~M. Nason.
+\newblock The model confidence set.
+\newblock \emph{Econometrica}, 79\penalty0 (2):\penalty0 453--497, 2011.
+\newblock \doi{10.3982/ECTA5771}.
+
+\bibitem[Hsu(1981)]{hsu1981best}
+Jason~C. Hsu.
+\newblock Simultaneous confidence intervals for all distances from the
+  ``best''.
+\newblock \emph{The Annals of Statistics}, 9\penalty0 (5):\penalty0 1026--1034,
+  1981.
+\newblock \doi{10.1214/aos/1176345582}.
+
+\bibitem[Koh et~al.(2021)Koh, Sagawa, Marklund, Xie, Zhang, Balsubramani, Hu,
+  Yasunaga, Phillips, Gao, Lee, David, Stavness, Guo, Earnshaw, Haque, Beery,
+  Leskovec, Kundaje, Pierson, Levine, Finn, and Liang]{koh2021wilds}
+Pang~Wei Koh, Shiori Sagawa, Henrik Marklund, Sang~Michael Xie, Marvin Zhang,
+  Akshay Balsubramani, Weihua Hu, Michihiro Yasunaga, Richard~Lanas Phillips,
+  Irena Gao, Tony Lee, Etienne David, Ian Stavness, Wei Guo, Berton Earnshaw,
+  Imran Haque, Sara~M. Beery, Jure Leskovec, Anshul Kundaje, Emma Pierson,
+  Sergey Levine, Chelsea Finn, and Percy Liang.
+\newblock {WILDS}: A benchmark of in-the-wild distribution shifts.
+\newblock In \emph{Proceedings of the 38th International Conference on Machine
+  Learning}, volume 139 of \emph{Proceedings of Machine Learning Research},
+  pages 5637--5664. PMLR, 2021.
+\newblock URL \url{https://proceedings.mlr.press/v139/koh21a.html}.
+
+\bibitem[Li and Zheng(2026)]{li2026online}
+Shibo Li and Yao Zheng.
+\newblock Online conformal model selection for nonstationary time series.
+\newblock \emph{arXiv preprint arXiv:2506.05544v2}, 2026.
+\newblock \doi{10.48550/arXiv.2506.05544}.
+
+\bibitem[Moore et~al.(2026)Moore, Pratt, Fan, et~al.]{moore2026registry}
+Jill~E. Moore, Henry~E. Pratt, Kaili Fan, et~al.
+\newblock An expanded registry of candidate cis-regulatory elements.
+\newblock \emph{Nature}, 2026.
+\newblock \doi{10.1038/s41586-025-09909-9}.
+
+\bibitem[Steinegger and S{\"o}ding(2017)]{steinegger2017mmseqs2}
+Martin Steinegger and Johannes S{\"o}ding.
+\newblock {MMseqs2} enables sensitive protein sequence searching for the
+  analysis of massive data sets.
+\newblock \emph{Nature Biotechnology}, 35\penalty0 (11):\penalty0 1026--1028,
+  2017.
+\newblock \doi{10.1038/nbt.3988}.
+
+\bibitem[Westfall(2011)]{westfall2011bootstrap}
+Peter~H. Westfall.
+\newblock On using the bootstrap for multiple comparisons.
+\newblock \emph{Journal of Biopharmaceutical Statistics}, 21\penalty0
+  (6):\penalty0 1187--1205, 2011.
+\newblock \doi{10.1080/10543406.2011.607751}.
+
+\bibitem[White(2000)]{white2000reality}
+Halbert White.
+\newblock A reality check for data snooping.
+\newblock \emph{Econometrica}, 68\penalty0 (5):\penalty0 1097--1126, 2000.
+\newblock \doi{10.1111/1468-0262.00152}.
+
+\end{thebibliography}
